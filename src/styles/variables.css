@@ -1,0 +1,138 @@
+/* ==========================================================================
+   DESIGN SYSTEM - CSS VARIABLES
+   Сформировано на основе дизайн-системы (палитра компонентов и UI)
+   ========================================================================== */
+
+:root {
+  /* --------------------------------------------------------------------------
+     1. PRIMARY PALETTE (Основная палитра)
+     -------------------------------------------------------------------------- */
+  --primary: #3b6ea0;              /* primary / btn_solid */
+  --primary-bg: #f8fafc;           /* primary bg */
+  --primary-bg-hover: #e2ebf3;     /* primary bg hover */
+  --primary-50: #e6f3f8;           /* primary 50 */
+  --primary-100: #d4e1ee;          /* primary 100 */
+  --primary-600: #346895;          /* primary 600 */
+  --primary-700: #2f5a85;          /* primary 700 */
+  --primary-800: #3b5a8a;          /* primary 800 */
+  --primary-900: #1e3a5f;          /* primary 900 */
+  --primary-alt: #3f73a8;          /* highlighted tariff surface */
+
+  /* --------------------------------------------------------------------------
+     2. SECONDARY PALETTE (Вторичная / акцентная палитра)
+     -------------------------------------------------------------------------- */
+  --secondary: #00c497;            /* secondary */
+  --secondary-bg: #ebfffa;         /* secondary bg */
+  --secondary-bg-hover: #d6fff5;   /* secondary bg hover */
+  --secondary-hover: #008f6d;      /* secondary hover */
+  --secondary-100: #aee5d1;        /* secondary 100 */
+  --secondary-600: #00a67e;        /* secondary 600 */
+  --secondary-700: #008667;        /* secondary 700 */
+
+  /* --------------------------------------------------------------------------
+     3. BACKGROUNDS & NEUTRALS (Фоны и базовые цвета)
+     -------------------------------------------------------------------------- */
+  --bg: #ecf2f8;                   /* bg */
+  --bg-secondary: #f8fafc;         /* secondary background */
+  --bg-subtle: #f7f8fc;            /* subtle modal background */
+  --surface-subtle: #f7f7f8;       /* subtle card background */
+  --white: #ffffff;                /* white */
+  --black: #000000;                /* black */
+  --gray-50: #f9fafb;              /* gray 50 */
+  --gray-100: #eeeef9;             /* gray 100 */
+  --gray-400: #9ca3af;             /* gray 400 */
+  --gray-500: #6b7280;             /* gray 500 */
+  --zinc-100: #f4f4f5;             /* zinc 100 */
+
+  /* --------------------------------------------------------------------------
+     4. TYPOGRAPHY & TEXT (Текстовые цвета)
+     -------------------------------------------------------------------------- */
+  --text: #12233f;                 /* text */
+  --text-secondary: #52525b;       /* secondary text */
+  --text-placeholder: #a1a1aa;     /* placeholder text */
+  --text-disabled: #8a8a99;        /* text_disabled */
+  --text-link: #2d547b;            /* link text */
+  --text-link-hover: #244869;      /* link text hover */
+
+  /* --------------------------------------------------------------------------
+     5. BUTTONS & INTERACTIVE (Кнопки и состояния интерактивных элементов)
+     -------------------------------------------------------------------------- */
+  --btn-solid: #3b6ea0;            /* btn_solid */
+  --btn-hover: #34608c;            /* btn_hover */
+  --btn-outline: #a6c2de;          /* btn_outline */
+  --btn-outline-hover: #ebf5ff;    /* btn_otline_hover */
+  --btn-disabled: #9db6cf;         /* Disabled (основной цвет с 50% прозрачностью) */
+  --icon-btn-hover: #f0fdf4;       /* Icon_btn_hover */
+
+  /* --------------------------------------------------------------------------
+     6. SUPPORTING SYSTEM TOKENS (Служебные переменные, используемые в проекте)
+     -------------------------------------------------------------------------- */
+  --error: #ef4444;
+  --error-bg: #fef2f2;
+  --red-50: #fef2f2;
+  --red-500: #e53e3e;
+  --red-600: #dc2626;
+  --warning: #f59e0b;
+  --orange-50: #fff7ed;
+  --orange-600: #ea580c;
+  --success: #00c497;
+  --success-bg: #f0fdf4;
+  --green-50: #f0fdf4;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --toast-success-bg: #16a34a;
+  --toast-error-bg: #ef4444;
+  --toast-warning-bg: #d97706;
+  --toast-info-bg: #3b6ea0;
+  --snow: #fafafa;
+
+  /* Оттенки Slate/нейтральные для таблиц и карточек */
+  --slate-50: #f8fafc;
+  --slate-50-alt: #f0f5fa;
+  --slate-100: #e8eef5;
+  --slate-100-alt2: #f1f5f9;
+  --slate-150: #eef2f6;
+  --slate-200: #e2e8f0;
+  --slate-250: #dce3ea;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --sky-50: #e6f0fa;
+
+  /* Дополнительные акцентные цвета */
+  --blue-50: #ebf4ff;
+  --blue-500: #3182ce;
+  --blue-600: #2b6cb0;
+  --blue-700: #2c5282;
+  --blue-vivid: #2563eb;
+  --indigo-100: #e3e3fe;
+  --indigo-950: #11023b;
+  --violet-100: #ddd9ff;
+
+  /* Превью push-уведомлений (виджет) */
+  --widget-text: #0c151d;
+  --widget-text-secondary: #767a7f;
+  --widget-action-bg: #487bfe;
+
+  /* Типографика */
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-2xs: 10px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 22px;
+  --font-size-3xl: 28px;
+
+  /* --------------------------------------------------------------------------
+     7. SIDEBAR (Сайдбар и меню)
+     -------------------------------------------------------------------------- */
+  --sidebar-active: #a6c2de;
+  --sidebar-active-hover: #95b5d5;
+  --sidebar-submenu-pl: 28px;
+  --sidebar-submenu-pl-icon: 18px;
+}

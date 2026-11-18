@@ -1,0 +1,13 @@
+/node_modules
+/.env
+/.env.production
+/dist
+
+*.tsbuildinfo
+/vite.config.js
+/vite.config.d.ts
+
+/coverage
+/.vscode
+/.idea
+

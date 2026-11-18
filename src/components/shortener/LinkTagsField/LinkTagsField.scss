@@ -1,0 +1,10 @@
+@import '@/styles/variables.css';
+
+.link-tags-field {
+  &__input {
+    &::placeholder {
+      color: var(--text-placeholder) !important;
+      opacity: 1 !important;
+    }
+  }
+}
