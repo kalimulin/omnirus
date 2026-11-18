@@ -51,6 +51,12 @@ const LinkServiceErrorPage = lazyWithMinDelay(
 const ShortLinkRedirectPage = lazyWithMinDelay(
   () => import('@/pages/Shortener/ShortLinkRedirectPage/ShortLinkRedirectPage')
 );
+const TermsPage = lazyWithMinDelay(
+  () => import('@/pages/TermsPage/TermsPage')
+);
+const PrivacyPage = lazyWithMinDelay(
+  () => import('@/pages/PrivacyPage/PrivacyPage')
+);
 
 function App() {
   return (
@@ -175,6 +181,25 @@ function App() {
         <Route
           path={ROUTES.shortRedirect}
           element={<ShortLinkRedirectPage />}
+        />
+
+        {/* Пользовательское соглашение и правила сервиса */}
+        <Route
+          path={ROUTES.terms}
+          element={<TermsPage />}
+        />
+        <Route
+          path="/agreement"
+          element={
+            <Navigate
+              to={ROUTES.terms}
+              replace
+            />
+          }
+        />
+        <Route
+          path={ROUTES.privacy}
+          element={<PrivacyPage />}
         />
 
         {/* 404 */}

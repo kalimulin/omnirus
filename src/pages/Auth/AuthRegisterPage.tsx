@@ -1,4 +1,4 @@
-import { Button, Link, Stack, VStack, useToast } from '@chakra-ui/react';
+import { Button, Link, Stack, Text, VStack, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -108,11 +108,42 @@ function AuthRegisterPageContent() {
   return (
     <Stack spacing={6}>
       <RegisterForm onEnter={() => void handleSubmit()} />
-      <VStack spacing={1}>
+      <VStack spacing={3}>
         <RegisterSubmitButton
           isLoading={isLoading}
           onSubmit={() => void handleSubmit()}
         />
+        <Text
+          fontSize="13px"
+          color="var(--text-secondary)"
+          textAlign="center"
+          lineHeight="1.4"
+        >
+          Создавая аккаунт, вы принимаете{' '}
+          <Link
+            as="a"
+            href={ROUTES.terms}
+            target="_blank"
+            rel="noopener noreferrer"
+            color="var(--primary)"
+            textDecoration="underline"
+            _hover={{ color: 'var(--text-link-hover)' }}
+          >
+            Пользовательское соглашение
+          </Link>{' '}
+          и{' '}
+          <Link
+            as="a"
+            href={ROUTES.privacy}
+            target="_blank"
+            rel="noopener noreferrer"
+            color="var(--primary)"
+            textDecoration="underline"
+            _hover={{ color: 'var(--text-link-hover)' }}
+          >
+            Политику конфиденциальности
+          </Link>
+        </Text>
         <Link
           as="button"
           type="button"

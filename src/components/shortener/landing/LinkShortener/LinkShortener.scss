@@ -332,6 +332,30 @@
     }
   }
 
+  &__terms-note {
+    margin: 12px 0 0;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm, 13px);
+    line-height: 1.45;
+    text-align: center;
+
+    @media (max-width: 640px) {
+      font-size: 12px;
+      text-align: left;
+    }
+  }
+
+  &__terms-link {
+    color: var(--primary);
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--text-link-hover);
+    }
+  }
+
   @media (max-width: 640px) {
     gap: 16px;
   }

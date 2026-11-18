@@ -3,6 +3,7 @@ import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react';
 import { checkUrlSafety, createShortcut } from '@/api/shortenerPublic';
 import errorIcon from '@/assets/landing/error.svg';
 import lockIcon from '@/assets/landing/lock.svg';
+import { ROUTES } from '@/routing/routes';
 import type { LinkShortenerProps } from '@/types/shortener';
 import { validateUrlFormat } from '@/utils/validators';
 
@@ -257,6 +258,30 @@ function LinkShortener({
             />
             {validationError}
           </div>
+        )}
+
+        {!isResultMode && (
+          <p className="shortener__terms-note">
+            Нажимая «Сократить», вы принимаете{' '}
+            <a
+              href={ROUTES.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shortener__terms-link"
+            >
+              Пользовательское соглашение
+            </a>{' '}
+            и{' '}
+            <a
+              href={ROUTES.privacy}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shortener__terms-link"
+            >
+              Политику конфиденциальности
+            </a>
+            . Вредоносные и фишинговые ссылки блокируются без предупреждения.
+          </p>
         )}
       </div>
     </div>

@@ -21,7 +21,9 @@ export const ROUTES = {
   linkNotFound: '/links/errors/not-found',
   linkInactive: '/links/errors/inactive',
   linkBlocked: '/links/errors/blocked',
-  shortRedirect: '/s/:code'
+  shortRedirect: '/s/:code',
+  terms: '/terms',
+  privacy: '/privacy'
 } as const;
 
 export const PAGE_TITLES: Partial<Record<string, string>> = {
@@ -34,6 +36,8 @@ export const PAGE_TITLES: Partial<Record<string, string>> = {
   [ROUTES.linkNotFound]: 'Такой ссылки не существует',
   [ROUTES.linkInactive]: 'Ссылка временно не работает',
   [ROUTES.linkBlocked]: 'Переход по ссылке остановлен',
+  [ROUTES.terms]: 'Пользовательское соглашение',
+  [ROUTES.privacy]: 'Политика конфиденциальности',
   [ROUTES.forgotPassword]: 'Восстановление пароля',
   [ROUTES.profile]: 'Настройка профиля',
   '/dashboard/profile': 'Настройка профиля',
