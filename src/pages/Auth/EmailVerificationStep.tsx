@@ -114,6 +114,9 @@ export function EmailVerificationStep({
           <strong style={{ color: 'var(--text)' }}>{email}</strong>.
           Введите его для защиты аккаунта от ботов:
         </Text>
+        <Text fontSize="12px" color="var(--text-secondary)" mt={2}>
+          Неподтверждённые аккаунты автоматически удаляются через 48 часов
+        </Text>
       </Box>
 
       <FormControl isInvalid={Boolean(error)}>
