@@ -23,7 +23,8 @@ export const ROUTES = {
   linkBlocked: '/links/errors/blocked',
   shortRedirect: '/s/:code',
   terms: '/terms',
-  privacy: '/privacy'
+  privacy: '/privacy',
+  feedback: '/feedback'
 } as const;
 
 export const PAGE_TITLES: Partial<Record<string, string>> = {
@@ -38,6 +39,7 @@ export const PAGE_TITLES: Partial<Record<string, string>> = {
   [ROUTES.linkBlocked]: 'Переход по ссылке остановлен',
   [ROUTES.terms]: 'Пользовательское соглашение',
   [ROUTES.privacy]: 'Политика конфиденциальности',
+  [ROUTES.feedback]: 'Обратная связь',
   [ROUTES.forgotPassword]: 'Восстановление пароля',
   [ROUTES.profile]: 'Настройка профиля',
   '/dashboard/profile': 'Настройка профиля',

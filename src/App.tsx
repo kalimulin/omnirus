@@ -58,6 +58,9 @@ const TermsPage = lazyWithMinDelay(
 const PrivacyPage = lazyWithMinDelay(
   () => import('@/pages/PrivacyPage/PrivacyPage')
 );
+const FeedbackPage = lazyWithMinDelay(
+  () => import('@/pages/FeedbackPage/FeedbackPage')
+);
 
 function App() {
   return (
@@ -201,6 +204,30 @@ function App() {
         <Route
           path={ROUTES.privacy}
           element={<PrivacyPage />}
+        />
+
+        {/* Форма обратной связи */}
+        <Route
+          path={ROUTES.feedback}
+          element={<FeedbackPage />}
+        />
+        <Route
+          path="/support"
+          element={
+            <Navigate
+              to={ROUTES.feedback}
+              replace
+            />
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <Navigate
+              to={ROUTES.feedback}
+              replace
+            />
+          }
         />
 
         {/* 404 */}

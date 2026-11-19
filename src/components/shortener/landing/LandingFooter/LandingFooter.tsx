@@ -15,18 +15,14 @@ export default function LandingFooter() {
             Политика конфиденциальности
           </Link>
           <span className="landing-footer__separator" aria-hidden="true">·</span>
-          <a href="mailto:support@омни.рус" className="landing-footer__link">
-            support@омни.рус
-          </a>
-          <span className="landing-footer__separator" aria-hidden="true">·</span>
-          <a href="mailto:abuse@омни.рус" className="landing-footer__link">
-            abuse@омни.рус
-          </a>
+          <Link to={ROUTES.feedback} className="landing-footer__link">
+            Обратная связь
+          </Link>
         </nav>
         <p className="landing-footer__copy">
           © 2026 ОМНИ.РУС. Сервис предоставляется бесплатно на условиях{' '}
-          <Link to={ROUTES.terms}>Пользовательского соглашения</Link>. Контакты — в{' '}
-          <Link to={ROUTES.privacy}>Политике конфиденциальности</Link>.
+          <Link to={ROUTES.terms}>Пользовательского соглашения</Link>. Контакты — на странице{' '}
+          <Link to={ROUTES.feedback}>Обратной связи</Link>.
         </p>
       </div>
     </footer>
