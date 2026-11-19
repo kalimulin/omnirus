@@ -34,7 +34,7 @@ export function RegisterForm({ onEnter }: { onEnter: () => void }) {
         name="login"
         label="Логин"
         labelFontSize="14px"
-        placeholder="example@omninotice"
+        placeholder="example@омни.рус"
         validators={[required('Введите логин'), email()]}
       />
       <FormPasswordField

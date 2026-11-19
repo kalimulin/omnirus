@@ -48,7 +48,7 @@ describe('LinkDetailPage (карточка ссылки)', () => {
       description: 'Для отслеживания рекламной кампании по акции «Черная пятница»',
       shortUrl: 'omni/fbl2V',
       shortcut: 'fbl2V',
-      targetUrl: 'https://shop.example.ru/landing/email?utm_source=omninotice',
+      targetUrl: 'https://shop.example.ru/landing/email?utm_source=omnirus',
       campaignId: null,
       campaign: 'Без кампании',
       tags: ['email', 'promo'],
@@ -104,7 +104,7 @@ describe('LinkDetailPage (карточка ссылки)', () => {
     expect(await screen.findByText('omni/fbl2V')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'https://shop.example.ru/landing/email?utm_source=omninotice',
+        'https://shop.example.ru/landing/email?utm_source=omnirus',
       ),
     ).toBeInTheDocument();
     expect(

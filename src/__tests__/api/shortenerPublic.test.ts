@@ -108,7 +108,7 @@ describe('shortenerPublic API', () => {
         reasons: [],
         score: 0,
         timestamp: '2026-11-10T10:00:00Z',
-        checkedBy: 'OmniNotice Security System',
+        checkedBy: 'Система безопасности омни.рус',
         recommendations: [],
         error: 'Некорректный домен'
       })

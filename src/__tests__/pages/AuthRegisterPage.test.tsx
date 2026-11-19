@@ -54,7 +54,7 @@ describe('AuthRegisterPage', () => {
     
     // Ждем появления реального поля ввода (Suspense загрузит компонент)
     expect(
-      await screen.findByPlaceholderText(/example@omninotice/i, {}, { timeout: 4000 })
+      await screen.findByPlaceholderText(/example@/i, {}, { timeout: 4000 })
     ).toBeInTheDocument();
     expect(
       await screen.findByText('Зарегистрироваться', {}, { timeout: 4000 })
@@ -65,7 +65,7 @@ describe('AuthRegisterPage', () => {
     renderWithProviders(<AuthPages mode="register" />);
     
     expect(
-      await screen.findByPlaceholderText(/example@omninotice/i, {}, { timeout: 4000 })
+      await screen.findByPlaceholderText(/example@/i, {}, { timeout: 4000 })
     ).toBeInTheDocument();
     expect(
       await screen.findByPlaceholderText(/введите пароль/i, {}, { timeout: 4000 })
@@ -97,7 +97,7 @@ describe('AuthRegisterPage', () => {
     renderWithProviders(<AuthPages mode="register" />);
 
     // Ждем загрузки формы
-    await screen.findByPlaceholderText(/example@omninotice/i, {}, { timeout: 4000 });
+    await screen.findByPlaceholderText(/example@/i, {}, { timeout: 4000 });
     await user.click(screen.getByText('На главную'));
 
     expect(mockNavigate).toHaveBeenCalledWith('/');
@@ -122,7 +122,7 @@ describe('AuthRegisterPage', () => {
     renderWithProviders(<AuthPages mode="register" />);
 
     await user.type(
-      await screen.findByPlaceholderText(/example@omninotice/i, {}, { timeout: 4000 }),
+      await screen.findByPlaceholderText(/example@/i, {}, { timeout: 4000 }),
       'new@mail.com'
     );
     await user.type(
@@ -166,7 +166,7 @@ describe('AuthRegisterPage', () => {
     renderWithProviders(<AuthPages mode="register" />);
 
     await user.type(
-      await screen.findByPlaceholderText(/example@omninotice/i, {}, { timeout: 4000 }),
+      await screen.findByPlaceholderText(/example@/i, {}, { timeout: 4000 }),
       'taken@mail.com'
     );
     await user.type(

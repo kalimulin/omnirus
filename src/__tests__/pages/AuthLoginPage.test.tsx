@@ -54,7 +54,7 @@ describe('AuthLoginPage', () => {
   test('рендерит форму логина', async () => {
     renderWithProviders(<AuthPages mode="login" />);
     expect(
-      await screen.findByPlaceholderText(/example@omninotice/i)
+      await screen.findByPlaceholderText(/example@/i)
     ).toBeInTheDocument();
     expect(await screen.findByText('Войти')).toBeInTheDocument();
   });
@@ -101,7 +101,7 @@ describe('AuthLoginPage', () => {
     renderWithProviders(<AuthPages mode="login" />);
 
     await user.type(
-      await screen.findByPlaceholderText(/example@omninotice/i),
+      await screen.findByPlaceholderText(/example@/i),
       'user@mail.com'
     );
     await user.type(
@@ -133,7 +133,7 @@ describe('AuthLoginPage', () => {
     renderWithProviders(<AuthPages mode="login" />);
 
     await user.type(
-      screen.getByPlaceholderText(/example@omninotice/i),
+      screen.getByPlaceholderText(/example@/i),
       'user@mail.com'
     );
     await user.type(

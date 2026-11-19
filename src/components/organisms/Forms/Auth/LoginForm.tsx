@@ -15,7 +15,7 @@ export default function LoginForm({ onEnter }: { onEnter?: () => void }) {
           labelFontSize={'14px'}
           id="login"
           name="login"
-          placeholder="example@omninotice"
+          placeholder="example@омни.рус"
           validators={[required('Введите логин'), email()]}
         />
       </Flex>

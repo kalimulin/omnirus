@@ -181,7 +181,7 @@ export default function AuthForgotPasswordPage() {
           </FormLabel>
           <Input
             type="email"
-            placeholder="example@omninotice.ru"
+            placeholder="example@омни.рус"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
