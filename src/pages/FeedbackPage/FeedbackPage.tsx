@@ -58,6 +58,7 @@ export default function FeedbackPage() {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(true);
+  const [website, setWebsite] = useState('');
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -105,12 +106,13 @@ export default function FeedbackPage() {
     setIsSubmitting(true);
 
     try {
-      await sendFeedback({
+      const res = await sendFeedback({
         category,
         name: name.trim(),
         email: email.trim(),
         subject: subject.trim(),
-        message: message.trim()
+        message: message.trim(),
+        website: website.trim() || undefined
       });
 
       setSubmittedData({
@@ -122,17 +124,22 @@ export default function FeedbackPage() {
 
       toast({
         title: 'Обращение успешно отправлено',
-        description: 'Спасибо за отклик! Мы свяжемся с вами в ближайшее время.',
+        description:
+          res.message ||
+          'Спасибо за отклик! Мы свяжемся с вами в ближайшее время.',
         status: 'success',
         duration: 5000,
         isClosable: true
       });
     } catch (error) {
       console.error('Ошибка отправки обращения:', error);
+      const errorMessage =
+        error instanceof Error && error.message
+          ? error.message
+          : 'Пожалуйста, попробуйте позже или напишите нам напрямую на support@омни.рус';
       toast({
         title: 'Не удалось отправить обращение',
-        description:
-          'Пожалуйста, попробуйте позже или напишите нам напрямую на support@омни.рус',
+        description: errorMessage,
         status: 'error',
         duration: 6000,
         isClosable: true
@@ -146,6 +153,7 @@ export default function FeedbackPage() {
     setMessage('');
     setSubject('');
     setCategory('question');
+    setWebsite('');
     setErrors({});
     setIsSubmitted(false);
     setSubmittedData(null);
@@ -283,6 +291,23 @@ export default function FeedbackPage() {
                   onSubmit={handleSubmit}
                   noValidate
                 >
+                  {/* Скрытое поле-ловушка для спам-ботов (honeypot) */}
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{
+                      display: 'none',
+                      position: 'absolute',
+                      opacity: 0,
+                      pointerEvents: 'none'
+                    }}
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+
                   {/* Выбор типа обращения: вопрос, предложение, жалоба */}
                   <div className="feedback-page__category-section">
                     <label className="feedback-page__section-label">

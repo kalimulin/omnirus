@@ -55,20 +55,6 @@ export interface User {
   platform: string;
 }
 
-export type EmailParams = {
-  to_email: string;
-  title: string;
-  message: string;
-  name?: string;
-  category?: string;
-  sender_email?: string;
-  from_name?: string;
-  from_email?: string;
-  reply_to?: string;
-  subject?: string;
-  [key: string]: unknown;
-};
-
 /* ────────────────────────────── DISPATCH LOGS ────────────────────────────── */
 
 export interface RawDispatchLog {
