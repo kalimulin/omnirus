@@ -6,6 +6,7 @@ import {
   type ReactNode
 } from 'react';
 
+import { setUserId } from '@/services/metrika';
 import { AuthContext } from './AuthContext';
 import {
   clearAuthCookies,
@@ -39,6 +40,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sessionStorage.removeItem('profile_data');
     setAuthState(null);
   }, []);
+
+  useEffect(() => {
+    if (authState?.userId) {
+      setUserId(authState.userId);
+    }
+  }, [authState?.userId]);
 
   useEffect(() => {
     localStorage.removeItem('usercenter_auth');

@@ -12,6 +12,7 @@ interface ImportMetaEnv {
   readonly VITE_SHORTENER_CORE_API_URL?: string;
   readonly VITE_SHORTENER_DEMO_TOKEN?: string;
   readonly VITE_SHORTENER_PROJECT_ID?: string;
+  readonly VITE_YANDEX_METRIKA_ID?: string;
 }
 
 interface ImportMeta {
