@@ -1,6 +1,7 @@
 import path from 'path';
 
 import react from '@vitejs/plugin-react';
+import { loadEnv } from 'vite';
 import { defineConfig } from 'vitest/config';
 
 function publicBase(): string {
@@ -10,50 +11,65 @@ function publicBase(): string {
   return trimmed === '/' ? '/' : `${trimmed}/`;
 }
 
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 5173
-  },
-  base: publicBase(),
-  build: {
-    outDir: 'dist'
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    css: false,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
-      exclude: [
-        'node_modules/',
-        'src/test/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/types/**',
-        'src/main.tsx',
-        'src/theme.ts',
-        'src/pages/back-up/**',
-        'src/components/back-up/**',
-        'src/components/atoms/Icons/**',
-        'src/components/organisms/Forms/Push/SelectingRecipientApp/**'
-      ]
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const proxyTarget =
+    env.VITE_PROXY_TARGET ||
+    process.env.VITE_PROXY_TARGET ||
+    'https://xn--h1ahdc.xn--p1acf';
+
+  return {
+    plugins: [react()],
+    server: {
+      port: 5173,
+      proxy: {
+        '/api': {
+          target: proxyTarget,
+          changeOrigin: true,
+          secure: false
+        }
+      }
     },
-    alias: {
-      '\\.(jpg|jpeg|png|gif|svg|webp)$': path.resolve(
-        __dirname,
-        './src/test/__mocks__/fileMock.ts'
-      )
+    base: publicBase(),
+    build: {
+      outDir: 'dist'
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
+      }
+    },
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: ['./src/test/setup.ts'],
+      css: false,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'html', 'lcov'],
+        exclude: [
+          'node_modules/',
+          'src/test/',
+          '**/*.d.ts',
+          '**/*.config.*',
+          '**/types/**',
+          'src/main.tsx',
+          'src/theme.ts',
+          'src/pages/back-up/**',
+          'src/components/back-up/**',
+          'src/components/atoms/Icons/**',
+          'src/components/organisms/Forms/Push/SelectingRecipientApp/**'
+        ]
+      },
+      alias: {
+        '\\.(jpg|jpeg|png|gif|svg|webp)$': path.resolve(
+          __dirname,
+          './src/test/__mocks__/fileMock.ts'
+        )
+      }
+    },
+    optimizeDeps: {
+      include: ['omni-notice-sigma-notification-widget']
     }
-  },
-  optimizeDeps: {
-    include: ['omni-notice-sigma-notification-widget']
-  }
+  };
 });

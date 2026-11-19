@@ -7,7 +7,7 @@ const COOKIE_CONSENT_KEY = 'omni_cookie_consent';
 
 export interface CookiePreferences {
   necessary: boolean;
-  functional: boolean;
+  functional?: boolean;
   analytics: boolean;
   timestamp: string;
 }
@@ -15,7 +15,6 @@ export interface CookiePreferences {
 export default function CookieBanner() {
   const [isOpen, setIsOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [functional, setFunctional] = useState(true);
   const [analytics, setAnalytics] = useState(true);
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export default function CookieBanner() {
     }
   }, []);
 
-  const saveConsent = (prefs: { necessary: boolean; functional: boolean; analytics: boolean }) => {
+  const saveConsent = (prefs: { necessary: boolean; analytics: boolean; functional?: boolean }) => {
     try {
       const data: CookiePreferences = {
         ...prefs,
@@ -44,15 +43,11 @@ export default function CookieBanner() {
   };
 
   const handleAcceptAll = () => {
-    saveConsent({ necessary: true, functional: true, analytics: true });
-  };
-
-  const handleOnlyNecessary = () => {
-    saveConsent({ necessary: true, functional: false, analytics: false });
+    saveConsent({ necessary: true, analytics: true });
   };
 
   const handleSaveSettings = () => {
-    saveConsent({ necessary: true, functional, analytics });
+    saveConsent({ necessary: true, analytics });
   };
 
   if (!isOpen) {
@@ -81,13 +76,6 @@ export default function CookieBanner() {
           <div className="cookie-banner__actions">
             <button
               type="button"
-              className="cookie-banner__btn cookie-banner__btn--necessary"
-              onClick={handleOnlyNecessary}
-            >
-              Только необходимые
-            </button>
-            <button
-              type="button"
               className="cookie-banner__btn cookie-banner__btn--accept"
               onClick={handleAcceptAll}
             >
@@ -114,15 +102,6 @@ export default function CookieBanner() {
               <label className="cookie-banner__toggle-label">
                 <input
                   type="checkbox"
-                  checked={functional}
-                  onChange={(e) => setFunctional(e.target.checked)}
-                />
-                <span>Функциональные</span>
-              </label>
-
-              <label className="cookie-banner__toggle-label">
-                <input
-                  type="checkbox"
                   checked={analytics}
                   onChange={(e) => setAnalytics(e.target.checked)}
                 />
@@ -141,10 +120,6 @@ export default function CookieBanner() {
             </div>
           </div>
         )}
-
-        <p className="cookie-banner__footer-note">
-          <Link to={ROUTES.privacy}>Политика конфиденциальности</Link>
-        </p>
       </div>
     </aside>
   );

@@ -81,17 +81,6 @@
     transition: all 0.15s ease;
     border: 1px solid transparent;
 
-    &--necessary {
-      background-color: transparent;
-      border-color: var(--slate-300, #cbd5e1);
-      color: var(--text, #12233f);
-
-      &:hover {
-        background-color: var(--slate-100, #e8eef5);
-        border-color: var(--slate-400, #94a3b8);
-      }
-    }
-
     &--accept {
       background-color: var(--primary, #3b6ea0);
       color: var(--white, #ffffff);
@@ -162,17 +151,6 @@
       &:disabled {
         cursor: not-allowed;
       }
-    }
-  }
-
-  &__footer-note {
-    font-size: 11px;
-    color: var(--text-disabled, #8a8a99);
-    margin: 0;
-
-    a {
-      color: var(--primary, #3b6ea0);
-      text-decoration: underline;
     }
   }
 }
