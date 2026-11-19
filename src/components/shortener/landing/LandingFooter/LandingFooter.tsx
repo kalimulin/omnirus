@@ -25,8 +25,7 @@ export default function LandingFooter() {
         </nav>
         <p className="landing-footer__copy">
           © 2026 ОМНИ.РУС. Сервис предоставляется бесплатно на условиях{' '}
-          <Link to={ROUTES.terms}>Пользовательского соглашения</Link>. Оператор персональных
-          данных: Калимулин Р.И., физическое лицо. Контакты — в{' '}
+          <Link to={ROUTES.terms}>Пользовательского соглашения</Link>. Контакты — в{' '}
           <Link to={ROUTES.privacy}>Политике конфиденциальности</Link>.
         </p>
       </div>
