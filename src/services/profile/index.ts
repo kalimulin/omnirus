@@ -1,5 +1,6 @@
 import {
   changeUserPassword,
+  deleteMyProfile,
   fetchCustomerProfileConfig,
   fetchMyProfile,
   getStoredAccessToken,
@@ -233,6 +234,19 @@ export const profileService = {
     }
 
     await delay(800);
+  },
+
+  async deleteAccount(
+    keepShortcuts = false,
+    options: ProfileRequestOptions = {}
+  ): Promise<void> {
+    if (options.simulateFailure) {
+      await delay(600);
+      throw new ProfileError('Не удалось удалить аккаунт');
+    }
+
+    const token = options.token || getStoredAccessToken();
+    await deleteMyProfile(keepShortcuts, token);
   }
 };
 

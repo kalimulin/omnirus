@@ -340,3 +340,35 @@ export async function saveCustomerProfileConfig(
     // Игнорируем сетевые ошибки синхронизации настроек
   }
 }
+
+/**
+ * Удалить профиль пользователя (DELETE /profile)
+ */
+export async function deleteMyProfile(
+  keepShortcuts = false,
+  token?: string
+): Promise<{ success: boolean; message?: string }> {
+  const effectiveToken = token || getStoredAccessToken();
+  if (!effectiveToken) {
+    throw new Error('Требуется авторизация');
+  }
+
+  const baseUrl = getUserCenterBaseUrl();
+  const response = await fetch(`${baseUrl}/profile`, {
+    method: 'DELETE',
+    headers: buildHeaders(effectiveToken),
+    body: JSON.stringify({ keepShortcuts })
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    let message = 'Не удалось удалить аккаунт';
+    try {
+      const parsed = JSON.parse(errorText);
+      message = parsed.error || parsed.message || message;
+    } catch {}
+    throw new Error(message);
+  }
+
+  return response.json();
+}

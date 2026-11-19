@@ -1,10 +1,24 @@
-import { Box, Heading } from '@chakra-ui/react';
+import {
+  Box,
+  Button as ChakraButton,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useToast
+} from '@chakra-ui/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '@/auth/AuthContext';
 import Button from '@/components/atoms/Button/Button';
 import ProgressModal from '@/components/shortener/ProgressModal/ProgressModal';
+import { ROUTES } from '@/routing/routes';
 import { ProfileError, profileService } from '@/services/profile';
 import type { UserProfile } from '@/types/profile';
 import {
@@ -167,13 +181,19 @@ function ProfileField({
 }
 
 export default function ProfilePage() {
-  const { authState, updateUser } = useAuth();
+  const { authState, updateUser, logout } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const failModeRef = useRef<'load' | 'save' | 'pwd' | null>(null);
   const [loadState, setLoadState] = useState<'loading' | 'loaded' | 'error'>(
     'loading'
   );
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [keepShortcuts, setKeepShortcuts] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [deleteModal, setDeleteModal] = useState<ModalState>(null);
 
   const accountEmail = authState?.login || '';
   const initialFirstName =
@@ -473,6 +493,36 @@ export default function ProfilePage() {
     void changePasswordFlow();
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleteBusy(true);
+    try {
+      await profileService.deleteAccount(keepShortcuts);
+      setDeleteModalOpen(false);
+      toast({
+        title: 'Учетная запись удалена',
+        description: 'Ваш аккаунт удален, согласие на обработку данных отозвано.',
+        status: 'info',
+        duration: 5000
+      });
+      logout();
+      navigate(ROUTES.home, { replace: true });
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : 'Не удалось удалить аккаунт';
+      setDeleteModal({
+        title: 'Удаление аккаунта',
+        error: msg
+      });
+    } finally {
+      setDeleteBusy(false);
+    }
+  };
+
+  const handleDeleteRetry = () => {
+    setDeleteModal(null);
+    void handleDeleteAccount();
+  };
+
   return (
     <Box className="profile-page">
       {loadState === 'error' ? (
@@ -748,7 +798,151 @@ export default function ProfilePage() {
               </Button>
             </div>
           </section>
+
+          {/* Секция: Удаление учетной записи и отзыв согласия */}
+          <section className="profile-page__card">
+            <h2 className="profile-page__section-title">
+              Удаление учетной записи и отзыв согласия
+            </h2>
+            <p className="profile-page__section-desc">
+              Удаление аккаунта прекращает обработку ваших персональных данных в
+              маркетинговых целях немедленно. Данные учетной записи хранятся до 3
+              лет для разрешения споров и требований закона (Политика
+              конфиденциальности, раздел 11), затем удаляются.
+            </p>
+            <p
+              style={{
+                fontSize: '13px',
+                lineHeight: '1.5',
+                color: 'var(--text-secondary)',
+                marginBottom: '16px'
+              }}
+            >
+              Короткие ссылки по умолчанию перестают работать. Если нужно сохранить
+              отдельные ссылки — отметьте это до удаления.
+            </p>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  color: 'var(--text)'
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={keepShortcuts}
+                  onChange={(e) => setKeepShortcuts(e.target.checked)}
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    cursor: 'pointer',
+                    accentColor: 'var(--primary)'
+                  }}
+                />
+                <span>Сохранить созданные короткие ссылки активными</span>
+              </label>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '12px',
+                alignItems: 'center',
+                flexWrap: 'wrap'
+              }}
+            >
+              <button
+                type="button"
+                className="profile-page__danger-btn"
+                onClick={() => setDeleteModalOpen(true)}
+                disabled={deleteBusy}
+              >
+                Удалить аккаунт
+              </button>
+              <button
+                type="button"
+                className="profile-page__ghost-btn"
+                onClick={() => setKeepShortcuts(false)}
+                disabled={deleteBusy}
+              >
+                Отменить
+              </button>
+            </div>
+
+            <p className="profile-page__delete-note">
+              Запрос по email:{' '}
+              <a href="mailto:privacy@омни.рус">privacy@омни.рус</a>
+            </p>
+          </section>
         </Box>
+      )}
+
+      <Modal
+        isOpen={deleteModalOpen}
+        onClose={() => !deleteBusy && setDeleteModalOpen(false)}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxW="480px" borderRadius="12px" p={2}>
+          <ModalHeader
+            fontSize="20px"
+            fontWeight="600"
+            color="var(--text)"
+            pb={2}
+          >
+            Удаление учетной записи
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text
+              fontSize="14px"
+              color="var(--text-secondary)"
+              lineHeight="1.5"
+              mb={4}
+            >
+              Вы действительно хотите удалить учетную запись? Все персональные
+              данные будут удалены или обезличены в соответствии с Политикой
+              конфиденциальности.
+            </Text>
+            <Text fontSize="13px" color="var(--text-secondary)" mb={4}>
+              {keepShortcuts
+                ? 'Ваши короткие ссылки останутся активными (анонимно).'
+                : 'Все ваши короткие ссылки перестанут работать.'}
+            </Text>
+          </ModalBody>
+          <ModalFooter gap={3}>
+            <ChakraButton
+              variant="ghost"
+              onClick={() => setDeleteModalOpen(false)}
+              isDisabled={deleteBusy}
+            >
+              Отменить
+            </ChakraButton>
+            <ChakraButton
+              colorScheme="red"
+              onClick={handleDeleteAccount}
+              isLoading={deleteBusy}
+              loadingText="Удаление..."
+            >
+              Удалить аккаунт
+            </ChakraButton>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {deleteModal && (
+        <ProgressModal
+          title={deleteModal.title}
+          duration={1600}
+          error={deleteModal.error}
+          onClose={() => setDeleteModal(null)}
+          onRetry={handleDeleteRetry}
+        />
       )}
 
       {saveModal && (

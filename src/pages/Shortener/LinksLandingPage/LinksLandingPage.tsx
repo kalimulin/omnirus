@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import { useAuth } from '@/auth/AuthContext';
 import AuthPrompt from '@/components/shortener/landing/AuthPrompt/AuthPrompt';
+import LandingFooter from '@/components/shortener/landing/LandingFooter/LandingFooter';
 import LandingHeader from '@/components/shortener/landing/LandingHeader/LandingHeader';
 import LinkShortener from '@/components/shortener/landing/LinkShortener/LinkShortener';
 import { MarketingBlock } from '@/components/shortener/landing/MarketingBlock/MarketingBlock';
@@ -87,6 +88,7 @@ export default function LinksLandingPage() {
           )}
         </div>
       </main>
+      <LandingFooter />
     </div>
   );
 }

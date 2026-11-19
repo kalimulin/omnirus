@@ -2,6 +2,7 @@ import { Flex } from '@chakra-ui/react';
 import { lazy, Suspense, ComponentType } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
+import CookieBanner from './components/molecules/CookieBanner/CookieBanner';
 import SpinnerLoader from './components/atoms/Loaders/SpinnerLoader/SpinnerLoader';
 import SidebarLayout from './components/layouts/SidebarLayout';
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage';
@@ -208,6 +209,7 @@ function App() {
           element={<NotFoundPage />}
         />
       </Routes>
+      <CookieBanner />
     </Suspense>
   );
 }

@@ -1,4 +1,12 @@
-import { Button, Link, Stack, Text, VStack, useToast } from '@chakra-ui/react';
+import {
+  Button,
+  Checkbox,
+  Link,
+  Stack,
+  Text,
+  VStack,
+  useToast
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -43,8 +51,23 @@ function AuthRegisterPageContent() {
   const [step, setStep] = useState<'form' | 'verify'>('form');
   const [verifyEmail, setVerifyEmail] = useState('');
   const [initialCode, setInitialCode] = useState('');
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [agreeData, setAgreeData] = useState(false);
+  const [agreeAge, setAgreeAge] = useState(false);
+
+  const isAgreed = agreeTerms && agreeData && agreeAge;
 
   const handleSubmit = async () => {
+    if (!isAgreed) {
+      toast({
+        title: 'Подтвердите согласие',
+        description: 'Для регистрации необходимо отметить обязательные согласия',
+        status: 'warning',
+        duration: 3000
+      });
+      return;
+    }
+
     const store = registry.getOrCreateStore('register');
     if (!store.validateAll()) return;
 
@@ -106,44 +129,82 @@ function AuthRegisterPageContent() {
   }
 
   return (
-    <Stack spacing={6}>
+    <Stack spacing={5}>
       <RegisterForm onEnter={() => void handleSubmit()} />
+
+      <VStack align="start" spacing={3} w="100%" pt={1}>
+        <Checkbox
+          isChecked={agreeTerms}
+          onChange={(e) => setAgreeTerms(e.target.checked)}
+          alignItems="flex-start"
+          size="sm"
+          colorScheme="blue"
+        >
+          <Text fontSize="12px" color="var(--text)" lineHeight="1.4">
+            Я принимаю{' '}
+            <Link
+              as="a"
+              href={ROUTES.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="var(--primary)"
+              textDecoration="underline"
+              onClick={(e) => e.stopPropagation()}
+              _hover={{ color: 'var(--text-link-hover)' }}
+            >
+              Пользовательское соглашение
+            </Link>{' '}
+            и{' '}
+            <Link
+              as="a"
+              href={ROUTES.privacy}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="var(--primary)"
+              textDecoration="underline"
+              onClick={(e) => e.stopPropagation()}
+              _hover={{ color: 'var(--text-link-hover)' }}
+            >
+              Политику конфиденциальности
+            </Link>
+          </Text>
+        </Checkbox>
+
+        <Checkbox
+          isChecked={agreeData}
+          onChange={(e) => setAgreeData(e.target.checked)}
+          alignItems="flex-start"
+          size="sm"
+          colorScheme="blue"
+        >
+          <Text fontSize="12px" color="var(--text)" lineHeight="1.4">
+            Я даю согласие на обработку моих персональных данных (email, логин, технические данные)
+            на условиях Политики конфиденциальности — в объеме, необходимом для регистрации и работы
+            Личного кабинета.
+          </Text>
+        </Checkbox>
+
+        <Checkbox
+          isChecked={agreeAge}
+          onChange={(e) => setAgreeAge(e.target.checked)}
+          alignItems="flex-start"
+          size="sm"
+          colorScheme="blue"
+        >
+          <Text fontSize="12px" color="var(--text)" lineHeight="1.4">
+            Мне 18 лет или больше, либо я использую Сервис с согласия родителя (законного
+            представителя).
+          </Text>
+        </Checkbox>
+      </VStack>
+
       <VStack spacing={3}>
         <RegisterSubmitButton
           isLoading={isLoading}
+          disabled={!isAgreed}
           onSubmit={() => void handleSubmit()}
         />
-        <Text
-          fontSize="13px"
-          color="var(--text-secondary)"
-          textAlign="center"
-          lineHeight="1.4"
-        >
-          Создавая аккаунт, вы принимаете{' '}
-          <Link
-            as="a"
-            href={ROUTES.terms}
-            target="_blank"
-            rel="noopener noreferrer"
-            color="var(--primary)"
-            textDecoration="underline"
-            _hover={{ color: 'var(--text-link-hover)' }}
-          >
-            Пользовательское соглашение
-          </Link>{' '}
-          и{' '}
-          <Link
-            as="a"
-            href={ROUTES.privacy}
-            target="_blank"
-            rel="noopener noreferrer"
-            color="var(--primary)"
-            textDecoration="underline"
-            _hover={{ color: 'var(--text-link-hover)' }}
-          >
-            Политику конфиденциальности
-          </Link>
-        </Text>
+
         <Link
           as="button"
           type="button"
@@ -162,12 +223,15 @@ function AuthRegisterPageContent() {
 
 function RegisterSubmitButton({
   isLoading,
+  disabled,
   onSubmit
 }: {
   isLoading: boolean;
+  disabled?: boolean;
   onSubmit: () => void;
 }) {
   const isFilled = useFormSelector('register', isRegisterFormFilled);
+  const isDisabled = Boolean(disabled || !isFilled);
 
   return (
     <Button
@@ -181,10 +245,11 @@ function RegisterSubmitButton({
       fontWeight="500"
       onClick={onSubmit}
       isLoading={isLoading}
+      isDisabled={isDisabled}
       loadingText="Создаем аккаунт..."
-      opacity={isFilled ? 1 : 0.5}
+      opacity={!isDisabled ? 1 : 0.5}
     >
-      Создать аккаунт
+      Зарегистрироваться
     </Button>
   );
 }

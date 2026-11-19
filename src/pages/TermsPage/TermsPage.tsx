@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import LandingFooter from '@/components/shortener/landing/LandingFooter/LandingFooter';
 import LandingHeader from '@/components/shortener/landing/LandingHeader/LandingHeader';
 import { ROUTES } from '@/routing/routes';
 import './TermsPage.scss';
@@ -970,6 +971,8 @@ export default function TermsPage() {
           </footer>
         </article>
       </main>
+
+      <LandingFooter />
     </div>
   );
 }

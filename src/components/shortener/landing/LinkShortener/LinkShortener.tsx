@@ -262,25 +262,26 @@ function LinkShortener({
 
         {!isResultMode && (
           <p className="shortener__terms-note">
-            Нажимая «Сократить», вы принимаете{' '}
+            Создавая ссылку, вы соглашаетесь с{' '}
             <a
               href={ROUTES.terms}
               target="_blank"
               rel="noopener noreferrer"
               className="shortener__terms-link"
             >
-              Пользовательское соглашение
-            </a>{' '}
-            и{' '}
+              Пользовательским соглашением
+            </a>
+            . Переход по ссылкам и создание гостевых ссылок обрабатываются
+            согласно{' '}
             <a
               href={ROUTES.privacy}
               target="_blank"
               rel="noopener noreferrer"
               className="shortener__terms-link"
             >
-              Политику конфиденциальности
+              Политике конфиденциальности
             </a>
-            . Вредоносные и фишинговые ссылки блокируются без предупреждения.
+            . Запрещено сокращать ссылки на фишинг, вирусы и запрещенный контент.
           </p>
         )}
       </div>

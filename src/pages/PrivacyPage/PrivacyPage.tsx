@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import LandingFooter from '@/components/shortener/landing/LandingFooter/LandingFooter';
 import LandingHeader from '@/components/shortener/landing/LandingHeader/LandingHeader';
 import { ROUTES } from '@/routing/routes';
 import './PrivacyPage.scss';
@@ -705,6 +706,8 @@ export default function PrivacyPage() {
           </footer>
         </article>
       </main>
+
+      <LandingFooter />
     </div>
   );
 }

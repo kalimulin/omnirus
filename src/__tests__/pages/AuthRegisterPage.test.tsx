@@ -57,7 +57,7 @@ describe('AuthRegisterPage', () => {
       await screen.findByPlaceholderText(/example@omninotice/i, {}, { timeout: 4000 })
     ).toBeInTheDocument();
     expect(
-      await screen.findByText('Создать аккаунт', {}, { timeout: 4000 })
+      await screen.findByText('Зарегистрироваться', {}, { timeout: 4000 })
     ).toBeInTheDocument();
   });
 
@@ -134,7 +134,12 @@ describe('AuthRegisterPage', () => {
       'password123'
     );
     
-    await user.click(await screen.findByText('Создать аккаунт'));
+    const checkboxes = screen.getAllByRole('checkbox');
+    for (let i = 0; i < 3; i++) {
+      await user.click(checkboxes[i]);
+    }
+
+    await user.click(await screen.findByText('Зарегистрироваться'));
 
     await waitFor(() => {
       expect(createUserCenter).toHaveBeenCalledWith(
@@ -173,7 +178,12 @@ describe('AuthRegisterPage', () => {
       'password123'
     );
     
-    await user.click(await screen.findByText('Создать аккаунт'));
+    const checkboxes = screen.getAllByRole('checkbox');
+    for (let i = 0; i < 3; i++) {
+      await user.click(checkboxes[i]);
+    }
+
+    await user.click(await screen.findByText('Зарегистрироваться'));
 
     await waitFor(() => {
       expect(screen.getByText('Логин уже занят')).toBeInTheDocument();
