@@ -36,16 +36,19 @@
         window,
         document,
         'script',
-        'https://mc.yandex.ru/metrika/tag.js',
+        'https://mc.yandex.ru/metrika/tag.js?id=114373494',
         'ym'
       );
 
       ym(114373494, 'init', {
         defer: true,
+        ssr: true,
+        webvisor: true,
         clickmap: true,
-        trackLinks: true,
+        referrer: document.referrer,
+        url: location.href,
         accurateTrackBounce: true,
-        webvisor: true
+        trackLinks: true
       });
     </script>
     <!-- /Yandex.Metrika counter -->
