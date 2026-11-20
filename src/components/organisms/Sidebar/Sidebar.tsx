@@ -1,16 +1,21 @@
 import { Flex } from '@chakra-ui/react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { useAuth } from '@/auth/AuthContext';
 import LogoFigmaIcon from '@/components/atoms/Icons/home/LogoFigmaIcon';
 import { LogoMini } from '@/components/atoms/Icons/LogoMini';
+import { SidebarLimitsWidget } from '@/components/molecules/SidebarElements/SidebarLimitsWidget/SidebarLimitsWidget';
 import { SidebarMenu } from '@/components/molecules/SidebarMenu/SidebarMenu';
+import { LimitExceededModal } from '@/components/shortener/LimitExceededModal/LimitExceededModal';
 import { COLLAPSED_SIDEBAR_ROUTES, ROUTES } from '@/routing/routes';
 
 import { SidebarProvider, useSidebar } from './SidebarContext';
 
 function SidebarContent() {
   const { isCollapsed } = useSidebar();
+  const { limits, isAuthorized } = useAuth();
+  const [limitModalResource, setLimitModalResource] = useState<'shortcuts' | 'campaigns' | null>(null);
 
   return (
     <Flex
@@ -26,7 +31,7 @@ function SidebarContent() {
       padding={'20px'}
       bg={'white'}
       direction={'column'}
-      gap={'60px'}
+      gap={'30px'}
       transition="max-width 0.2s ease"
     >
       <Flex
@@ -47,6 +52,21 @@ function SidebarContent() {
         )}
       </Flex>
       <SidebarMenu />
+      {isAuthorized && !isCollapsed && limits && (
+        <SidebarLimitsWidget
+          limits={limits}
+          onOpenModal={(res) => setLimitModalResource(res)}
+        />
+      )}
+      {limitModalResource && limits && (
+        <LimitExceededModal
+          isOpen={true}
+          onClose={() => setLimitModalResource(null)}
+          resource={limitModalResource}
+          limit={limits[limitModalResource].max}
+          used={limits[limitModalResource].used}
+        />
+      )}
     </Flex>
   );
 }

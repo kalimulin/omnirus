@@ -44,7 +44,9 @@ import {
   updateCampaign,
   isApiConfigured,
 } from '@/api/shortener';
+import { useAuth } from '@/auth/AuthContext';
 import SpinnerLoader from '@/components/atoms/Loaders/SpinnerLoader/SpinnerLoader';
+import { LimitExceededModal } from '@/components/shortener/LimitExceededModal/LimitExceededModal';
 import type { CampaignRow } from '@/types/shortener';
 import './CampaignsPage.scss';
 
@@ -507,11 +509,13 @@ function ErrorState({ onRetry }: ErrorStateProps) {
 export default function CampaignsPage() {
   const navigate = useNavigate();
   const toast = useToast();
+  const { limits, refreshLimits } = useAuth();
   const apiConfigured = isApiConfigured();
   const [campaigns, setCampaigns] = useState<CampaignRow[]>([]);
   const [searchText, setSearchText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [editTarget, setEditTarget] = useState<CampaignRow | null>(null);
+  const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
   const [pageState, setPageState] = useState<PageState>(() =>
     apiConfigured ? 'loading' : 'empty'
   );
@@ -649,6 +653,7 @@ export default function CampaignsPage() {
             description: updated.description,
           });
           setCampaigns((prev) => [created, ...prev]);
+          void refreshLimits?.();
           navigate(`/campaigns/${created.id}`);
         } else {
           await updateCampaign(updated.id, {
@@ -684,6 +689,10 @@ export default function CampaignsPage() {
   };
 
   const handleCreate = () => {
+    if (limits?.campaigns.isReached) {
+      setIsLimitModalOpen(true);
+      return;
+    }
     setEditTarget(null);
     onOpen();
   };
@@ -774,6 +783,24 @@ export default function CampaignsPage() {
           </Box>
 
           <Box flex={1} />
+
+          {limits && (
+            <Text
+              fontSize="13px"
+              fontWeight={500}
+              color={
+                limits.campaigns.isReached
+                  ? 'var(--error)'
+                  : limits.campaigns.remaining <= 1 ||
+                      limits.campaigns.remaining / Math.max(1, limits.campaigns.max) <= 0.2
+                    ? 'var(--orange-600)'
+                    : 'var(--text-secondary)'
+              }
+              mr={2}
+            >
+              Кампании: {limits.campaigns.used} / {limits.campaigns.max}
+            </Text>
+          )}
 
           <Button
             bg="var(--primary)"
@@ -910,6 +937,15 @@ export default function CampaignsPage() {
           onSave={handleSave}
         />
       )}
+
+      {/* Limit Exceeded Modal */}
+      <LimitExceededModal
+        isOpen={isLimitModalOpen}
+        onClose={() => setIsLimitModalOpen(false)}
+        resource="campaigns"
+        limit={limits?.campaigns.max}
+        used={limits?.campaigns.used}
+      />
     </Box>
   );
 }

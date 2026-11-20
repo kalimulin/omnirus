@@ -70,6 +70,8 @@ import { QrModal } from '@/components/shortener/QrModal/QrModal';
 import { RedirectModal } from '@/components/shortener/RedirectModal/RedirectModal';
 import { RedirectPromptModal } from '@/components/shortener/RedirectPromptModal/RedirectPromptModal';
 import { ShortenModal } from '@/components/shortener/ShortenModal/ShortenModal';
+import { LimitExceededModal } from '@/components/shortener/LimitExceededModal/LimitExceededModal';
+import { useAuth } from '@/auth/AuthContext';
 import { ROUTES } from '@/routing/routes';
 import type { CampaignRow, LinkRow } from '@/types/shortener';
 
@@ -426,7 +428,9 @@ export function LinksRegistryTable({
     [onLinksChange]
   );
 
+  const { limits, refreshLimits } = useAuth();
   const [isShortenModalOpen, setIsShortenModalOpen] = useState(false);
+  const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
 
   // Copy state
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -559,6 +563,7 @@ export function LinksRegistryTable({
 
   const handleLinkCreated = (newLink: LinkRow) => {
     updateLinks((prev) => [newLink, ...prev]);
+    void refreshLimits?.();
   };
 
   const handleSort = (key: SortKey) => {
@@ -1113,7 +1118,11 @@ export function LinksRegistryTable({
                 ? null
                 : (emptyTitle ?? 'Сократите ссылку до удобного короткого адреса')
             }
-            onShortenClick={() => setIsShortenModalOpen(true)}
+            onShortenClick={() =>
+              limits?.shortcuts.isReached
+                ? setIsLimitModalOpen(true)
+                : setIsShortenModalOpen(true)
+            }
           />
         ) : (
           <>
@@ -1232,20 +1241,42 @@ export function LinksRegistryTable({
               {actionButton !== undefined ? (
                 actionButton
               ) : (
-                <Button
-                  bg="var(--primary)"
-                  color="white"
-                  borderRadius="10px"
-                  h="36px"
-                  px="16px"
-                  fontSize="14px"
-                  fontWeight="500"
-                  _hover={{ bg: 'var(--text-link)' }}
-                  rightIcon={<AddIcon boxSize="11px" />}
-                  onClick={() => setIsShortenModalOpen(true)}
-                >
-                  Сократить ссылку
-                </Button>
+                <HStack spacing={3}>
+                  {limits && (
+                    <Text
+                      fontSize="13px"
+                      fontWeight={500}
+                      color={
+                        limits.shortcuts.isReached
+                          ? 'var(--error)'
+                          : limits.shortcuts.remaining <= 5 ||
+                              limits.shortcuts.remaining / Math.max(1, limits.shortcuts.max) <= 0.1
+                            ? 'var(--orange-600)'
+                            : 'var(--text-secondary)'
+                      }
+                    >
+                      Ссылки: {limits.shortcuts.used} / {limits.shortcuts.max}
+                    </Text>
+                  )}
+                  <Button
+                    bg="var(--primary)"
+                    color="white"
+                    borderRadius="10px"
+                    h="36px"
+                    px="16px"
+                    fontSize="14px"
+                    fontWeight="500"
+                    _hover={{ bg: 'var(--text-link)' }}
+                    rightIcon={<AddIcon boxSize="11px" />}
+                    onClick={() =>
+                      limits?.shortcuts.isReached
+                        ? setIsLimitModalOpen(true)
+                        : setIsShortenModalOpen(true)
+                    }
+                  >
+                    Сократить ссылку
+                  </Button>
+                </HStack>
               )}
             </Flex>
 
@@ -1967,6 +1998,15 @@ export function LinksRegistryTable({
         onCreated={handleLinkCreated}
         campaigns={allCampaigns}
         availableTags={allTags}
+      />
+
+      {/* Limit Exceeded Modal */}
+      <LimitExceededModal
+        isOpen={isLimitModalOpen}
+        onClose={() => setIsLimitModalOpen(false)}
+        resource="shortcuts"
+        limit={limits?.shortcuts.max}
+        used={limits?.shortcuts.used}
       />
 
       {/* Redirect Modal */}
