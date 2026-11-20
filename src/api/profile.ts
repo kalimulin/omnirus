@@ -1,6 +1,6 @@
 import { getApiBaseUrl } from '@/api/shortenerConfig';
 import { getAccessTokenCookie } from '@/auth/authCookies';
-import type { ChangePasswordPayload } from '@/types/profile';
+import type { ChangePasswordPayload, UserLimits } from '@/types/profile';
 
 const AUTH_STORAGE_KEY = 'usercenter_auth';
 
@@ -135,6 +135,7 @@ export interface ApiProfileData {
   contact_phone?: ApiRegistryItem[] | null;
   contact_email?: ApiRegistryItem[] | null;
   info?: Record<string, { title: string; value: unknown }> | null;
+  limits?: UserLimits | null;
 }
 
 interface PhpProfileResponse {
@@ -147,6 +148,7 @@ interface PhpProfileResponse {
   email?: string | null;
   position?: string | null;
   settings?: Record<string, unknown> | null;
+  limits?: UserLimits | null;
 }
 
 const buildHeaders = (
@@ -207,12 +209,42 @@ export async function fetchMyProfile(
         : [],
       info: rawJson.position
         ? { position: { title: 'Должность', value: rawJson.position } }
-        : null
+        : null,
+      limits: rawJson.limits ?? null
     };
   } catch (e) {
     if (e instanceof Error && e.message.includes('Не удалось')) {
       throw e;
     }
+  }
+
+  return null;
+}
+
+/**
+ * Получить текущие лимиты и квоты пользователя (GET /api/profile/limits)
+ */
+export async function fetchUserLimits(
+  token?: string
+): Promise<UserLimits | null> {
+  const baseUrl = getUserCenterBaseUrl();
+  const effectiveToken = token || getStoredAccessToken();
+  if (!effectiveToken) return null;
+
+  try {
+    const response = await fetch(`${baseUrl}/profile/limits`, {
+      method: 'GET',
+      headers: buildHeaders(effectiveToken, '')
+    });
+
+    if (response.ok) {
+      const data = (await response.json()) as UserLimits;
+      if (data && typeof data === 'object' && data.shortcuts && data.campaigns) {
+        return data;
+      }
+    }
+  } catch {
+    // игнорируем ошибку сети и возвращаем null
   }
 
   return null;
