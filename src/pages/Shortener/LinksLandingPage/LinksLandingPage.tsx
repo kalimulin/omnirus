@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { useAuth } from '@/auth/AuthContext';
@@ -10,7 +10,6 @@ import { MarketingBlock } from '@/components/shortener/landing/MarketingBlock/Ma
 import ResultCard from '@/components/shortener/landing/ResultCard/ResultCard';
 import { ROUTES } from '@/routing/routes';
 import type { LinkData } from '@/types/shortener';
-import { clearGuestShortcuts } from '@/utils/guestShortcuts';
 
 import './LinksLandingPage.scss';
 
@@ -23,11 +22,6 @@ export default function LinksLandingPage() {
   const [lastInputUrl, setLastInputUrl] = useState('');
   const [resetKey, setResetKey] = useState(0);
   const [showMarketing, setShowMarketing] = useState(true);
-
-  // Ссылки на лендинге не сохраняются в браузере; очищаем остаточные записи
-  useEffect(() => {
-    clearGuestShortcuts();
-  }, []);
 
   if (isAuthorized) {
     return (

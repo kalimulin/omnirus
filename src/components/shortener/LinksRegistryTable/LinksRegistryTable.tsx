@@ -71,9 +71,16 @@ import { RedirectModal } from '@/components/shortener/RedirectModal/RedirectModa
 import { RedirectPromptModal } from '@/components/shortener/RedirectPromptModal/RedirectPromptModal';
 import { ShortenModal } from '@/components/shortener/ShortenModal/ShortenModal';
 import { LimitExceededModal } from '@/components/shortener/LimitExceededModal/LimitExceededModal';
+import { ClaimGuestShortcutsModal } from '@/components/shortener/ClaimGuestShortcutsModal/ClaimGuestShortcutsModal';
 import { useAuth } from '@/auth/AuthContext';
 import { ROUTES } from '@/routing/routes';
 import type { CampaignRow, LinkRow } from '@/types/shortener';
+import {
+  getGuestShortcuts,
+  claimAllGuestShortcuts,
+  claimSpecificGuestShortcuts,
+  type GuestShortcut
+} from '@/utils/guestShortcuts';
 
 import './LinksRegistryTable.scss';
 
@@ -431,6 +438,40 @@ export function LinksRegistryTable({
   const { limits, refreshLimits } = useAuth();
   const [isShortenModalOpen, setIsShortenModalOpen] = useState(false);
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
+  const [pendingGuestLinks, setPendingGuestLinks] = useState<GuestShortcut[]>([]);
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
+  const claimedGuestRef = useRef(false);
+
+  useEffect(() => {
+    if (claimedGuestRef.current || !limits) return;
+
+    const guestLinks = getGuestShortcuts();
+    if (guestLinks.length === 0) return;
+
+    const remaining = limits.shortcuts.remaining;
+    if (remaining >= guestLinks.length) {
+      claimedGuestRef.current = true;
+      void claimAllGuestShortcuts().then(() => {
+        void refreshLimits?.();
+        if (apiConfigured) {
+          void fetchLinks().then((data) => updateLinks(data));
+        }
+      });
+    } else if (remaining > 0) {
+      claimedGuestRef.current = true;
+      setPendingGuestLinks(guestLinks);
+      setIsClaimModalOpen(true);
+    }
+  }, [limits, apiConfigured, refreshLimits, updateLinks]);
+
+  const handleClaimSpecific = async (selectedCodes: string[]) => {
+    await claimSpecificGuestShortcuts(selectedCodes);
+    void refreshLimits?.();
+    if (apiConfigured) {
+      const data = await fetchLinks();
+      updateLinks(data);
+    }
+  };
 
   // Copy state
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -2008,6 +2049,17 @@ export function LinksRegistryTable({
         limit={limits?.shortcuts.max}
         used={limits?.shortcuts.used}
       />
+
+      {/* Claim Guest Shortcuts Modal */}
+      {isClaimModalOpen && pendingGuestLinks.length > 0 && limits && (
+        <ClaimGuestShortcutsModal
+          isOpen={isClaimModalOpen}
+          onClose={() => setIsClaimModalOpen(false)}
+          guestLinks={pendingGuestLinks}
+          maxSelectable={limits.shortcuts.remaining}
+          onClaim={handleClaimSpecific}
+        />
+      )}
 
       {/* Redirect Modal */}
       {redirectLink && !isRedirectLoading && !isRedirectPromptOpen && (

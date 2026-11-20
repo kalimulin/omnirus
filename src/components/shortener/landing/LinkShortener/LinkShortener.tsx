@@ -5,6 +5,7 @@ import errorIcon from '@/assets/landing/error.svg';
 import lockIcon from '@/assets/landing/lock.svg';
 import { ROUTES } from '@/routing/routes';
 import type { LinkShortenerProps } from '@/types/shortener';
+import { saveGuestShortcut } from '@/utils/guestShortcuts';
 import { validateUrlFormat } from '@/utils/validators';
 
 import './LinkShortener.scss';
@@ -156,6 +157,13 @@ function LinkShortener({
     try {
       // createShortcut возвращает LinkData — маппинг внутри API-слоя
       const shortcutData = await createShortcut(url.trim());
+      saveGuestShortcut({
+        shortUrl: shortcutData.shortUrl,
+        originalUrl: shortcutData.originalUrl,
+        shortcut: shortcutData.shortcut,
+        shortcutId: shortcutData.shortcutId || shortcutData.shortcut,
+        createdAt: shortcutData.createdAt
+      });
       onShortened(shortcutData);
 
       setShowSecurityNote(true);

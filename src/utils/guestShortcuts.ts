@@ -75,6 +75,31 @@ export const clearGuestShortcuts = (): void => {
 export const getGuestTtlHours = (): number => TTL_HOURS;
 
 /**
+ * Закрепить выбранные гостевые ссылки за аккаунтом.
+ */
+export async function claimSpecificGuestShortcuts(
+  codes: string[],
+  projectId?: string
+): Promise<void> {
+  for (const code of codes) {
+    try {
+      await claimShortcut(code, projectId);
+      removeGuestShortcut(code);
+    } catch (err) {
+      const errCode = (err as Error & { code?: string }).code;
+      if (errCode === 'SHORTCUT_NOT_FOUND') {
+        removeGuestShortcut(code);
+      } else if (
+        errCode === 'LIMIT_EXCEEDED_SHORTCUTS' ||
+        (err as Error).message.includes('лимит')
+      ) {
+        break;
+      }
+    }
+  }
+}
+
+/**
  * Закрепить все гостевые ссылки за аккаунтом после того, как пользователь
  * авторизовался. Вызывается один раз после получения токена авторизации.
  */
@@ -96,6 +121,12 @@ export async function claimAllGuestShortcuts(
         // Ссылка истекла на сервере — убираем из localStorage
         removeGuestShortcut(guest.shortcut);
         console.warn(`TTL expired, removed locally: ${guest.shortcut}`);
+      } else if (
+        code === 'LIMIT_EXCEEDED_SHORTCUTS' ||
+        (err as Error).message.includes('лимит')
+      ) {
+        console.warn(`Limit reached, stopped claiming: ${guest.shortcut}`);
+        break;
       } else {
         console.error(`Failed to claim ${guest.shortcut}:`, err);
       }
