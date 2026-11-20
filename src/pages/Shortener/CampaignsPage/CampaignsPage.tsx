@@ -29,7 +29,6 @@ import {
   SearchIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  SettingsIcon,
   LinkIcon,
   EditIcon,
   InfoOutlineIcon,
@@ -234,76 +233,6 @@ function EditCampaignModal({
         </ModalFooter>
       </ModalContent>
     </Modal>
-  );
-}
-
-// ─── Debug State Switcher ──────────────────────────────────────────────────────
-
-interface DebugSwitcherProps {
-  currentState: PageState;
-  onChange: (state: PageState) => void;
-}
-
-function DebugStateSwitcher({ currentState, onChange }: DebugSwitcherProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const states: { key: PageState; label: string; dotClass: string }[] = [
-    {
-      key: 'loading',
-      label: 'Загрузка',
-      dotClass: 'campaigns-debug-panel__dot--loading',
-    },
-    {
-      key: 'has-data',
-      label: 'Есть кампании',
-      dotClass: 'campaigns-debug-panel__dot--has-data',
-    },
-    {
-      key: 'empty',
-      label: 'Нет кампаний',
-      dotClass: 'campaigns-debug-panel__dot--empty',
-    },
-    {
-      key: 'error',
-      label: 'Ошибка загрузки',
-      dotClass: 'campaigns-debug-panel__dot--error',
-    },
-  ];
-
-  return (
-    <Box className="campaigns-debug-panel">
-      {isMenuOpen && (
-        <Box className="campaigns-debug-panel__menu">
-          <Text className="campaigns-debug-panel__label">Состояние</Text>
-          {states.map((s) => (
-            <button
-              key={s.key}
-              type="button"
-              className={`campaigns-debug-panel__option ${
-                currentState === s.key
-                  ? 'campaigns-debug-panel__option--active'
-                  : ''
-              }`}
-              onClick={() => {
-                onChange(s.key);
-                setIsMenuOpen(false);
-              }}
-            >
-              <Box className={`campaigns-debug-panel__dot ${s.dotClass}`} />
-              {s.label}
-            </button>
-          ))}
-        </Box>
-      )}
-      <button
-        type="button"
-        className="campaigns-debug-panel__toggle"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        title="Переключить состояние"
-      >
-        <SettingsIcon />
-      </button>
-    </Box>
   );
 }
 
@@ -922,9 +851,6 @@ export default function CampaignsPage() {
         <Heading className="campaigns-page__subtitle">Список кампаний</Heading>
         {renderContent()}
       </Box>
-
-      {/* Debug State Switcher */}
-      <DebugStateSwitcher currentState={pageState} onChange={setPageState} />
 
       {/* Edit / Create Modal */}
       {isOpen && (
