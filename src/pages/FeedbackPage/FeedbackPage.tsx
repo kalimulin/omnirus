@@ -1,5 +1,5 @@
 import { Checkbox, useToast } from '@chakra-ui/react';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import {
   LuCircleCheck,
   LuCircleHelp,
@@ -12,7 +12,7 @@ import {
   LuSparkles,
   LuTriangleAlert
 } from 'react-icons/lu';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { useAuth } from '@/auth/AuthContext';
 import CustomButton from '@/components/atoms/Button/CustomButton';
@@ -47,6 +47,7 @@ const CATEGORY_HINTS: Record<FeedbackCategory, string> = {
 export default function FeedbackPage() {
   const toast = useToast();
   const { authState } = useAuth();
+  const [searchParams] = useSearchParams();
 
   const [category, setCategory] = useState<FeedbackCategory>('question');
   const [name, setName] = useState(
@@ -59,6 +60,24 @@ export default function FeedbackPage() {
   const [message, setMessage] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(true);
   const [website, setWebsite] = useState('');
+
+  useEffect(() => {
+    const catParam = searchParams.get('category');
+    if (
+      catParam &&
+      ['question', 'suggestion', 'complaint'].includes(catParam)
+    ) {
+      setCategory(catParam as FeedbackCategory);
+    }
+    const subjParam = searchParams.get('subject');
+    if (subjParam) {
+      setSubject(subjParam);
+    }
+    const msgParam = searchParams.get('message');
+    if (msgParam) {
+      setMessage(msgParam);
+    }
+  }, [searchParams]);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
