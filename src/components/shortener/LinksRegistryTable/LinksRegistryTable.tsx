@@ -1292,7 +1292,7 @@ export function LinksRegistryTable({
                           ? 'var(--error)'
                           : limits.shortcuts.remaining <= 5 ||
                               limits.shortcuts.remaining / Math.max(1, limits.shortcuts.max) <= 0.1
-                            ? 'var(--orange-600)'
+                            ? '#b45309'
                             : 'var(--text-secondary)'
                       }
                     >

@@ -791,9 +791,8 @@ export default function CampaignsPage() {
               color={
                 limits.campaigns.isReached
                   ? 'var(--error)'
-                  : limits.campaigns.remaining <= 1 ||
-                      limits.campaigns.remaining / Math.max(1, limits.campaigns.max) <= 0.2
-                    ? 'var(--orange-600)'
+                  : limits.campaigns.remaining === 1 && limits.campaigns.used > 0
+                    ? '#b45309'
                     : 'var(--text-secondary)'
               }
               mr={2}

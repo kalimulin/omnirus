@@ -11,9 +11,20 @@ export function getLimitStatus(
   used: number,
   max: number
 ): 'normal' | 'warning' | 'danger' {
+  if (max <= 0) return 'normal';
+  // Красный (danger) только при достижении лимита
   if (used >= max) return 'danger';
+
+  // Предупреждение (warning / янтарный) только при близком приближении:
+  // для большого пула (ссылки > 10) — осталось <= 5 слотов
+  // для маленького пула (кампании <= 10) — остался ровно 1 свободный слот
   const remaining = max - used;
-  if (remaining <= 5 || (max > 0 && remaining / max <= 0.1)) return 'warning';
+  const isNearLimit =
+    max > 10
+      ? remaining <= 5 || remaining / max <= 0.1
+      : remaining === 1 && used > 0;
+
+  if (isNearLimit) return 'warning';
   return 'normal';
 }
 
