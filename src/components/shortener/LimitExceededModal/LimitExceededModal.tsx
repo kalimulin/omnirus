@@ -13,7 +13,7 @@ import {
   Text,
   VStack
 } from '@chakra-ui/react';
-import { LuCircleAlert, LuMail } from 'react-icons/lu';
+import { LuCircleAlert, LuInfo, LuMail } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 
 import ArrowRightIcon from '@/components/atoms/Icons/home/ArrowRightIcon';
@@ -39,11 +39,18 @@ export function LimitExceededModal({
 
   const isShortcuts = resource === 'shortcuts';
   const resourceTitle = isShortcuts ? 'ссылок' : 'кампаний';
-  const title = `Лимит ${resourceTitle} исчерпан`;
+  const isReached = used !== undefined ? used >= limit : true;
+  const title = isReached
+    ? `Лимит ${resourceTitle} исчерпан`
+    : `Лимит ${resourceTitle} ограничен`;
 
   const handleContactSupport = () => {
     const subject = `Запрос на увеличение лимита ${resourceTitle}`;
-    const message = `Здравствуйте!\n\nПрошу увеличить лимит ${resourceTitle} для моего аккаунта.\nТекущий лимит: ${limit}.\n\nЗаранее спасибо!`;
+    const usedText =
+      used !== undefined
+        ? `Использовано: ${used} из ${limit}.`
+        : `Текущий лимит: ${limit}.`;
+    const message = `Здравствуйте!\n\nПрошу увеличить лимит ${resourceTitle} для моего аккаунта.\n${usedText}\n\nЗаранее спасибо!`;
 
     const searchParams = new URLSearchParams({
       category: 'suggestion',
@@ -66,8 +73,13 @@ export function LimitExceededModal({
       <ModalOverlay />
       <ModalContent className="limit-exceeded-modal">
         <ModalHeader className="limit-exceeded-modal__header">
-          <Box className="limit-exceeded-modal__icon-wrap" aria-hidden="true">
-            <LuCircleAlert size={22} />
+          <Box
+            className={`limit-exceeded-modal__icon-wrap ${
+              !isReached ? 'limit-exceeded-modal__icon-wrap--info' : ''
+            }`}
+            aria-hidden="true"
+          >
+            {isReached ? <LuCircleAlert size={22} /> : <LuInfo size={22} />}
           </Box>
           <Text as="span">{title}</Text>
         </ModalHeader>
@@ -75,17 +87,33 @@ export function LimitExceededModal({
 
         <ModalBody className="limit-exceeded-modal__body">
           <VStack align="stretch" spacing={3}>
-            <Text
-              fontSize="var(--font-size-md)"
-              color="var(--text)"
-              lineHeight="1.5"
-            >
-              Вы использовали{' '}
-              <strong>
-                {used !== undefined ? used : limit} из {limit}
-              </strong>{' '}
-              доступных {resourceTitle} на вашем тарифе.
-            </Text>
+            {isReached ? (
+              <Text
+                fontSize="var(--font-size-md)"
+                color="var(--text)"
+                lineHeight="1.5"
+              >
+                Вы использовали{' '}
+                <strong>
+                  {used !== undefined ? used : limit} из {limit}
+                </strong>{' '}
+                доступных {resourceTitle} на вашем тарифе.
+              </Text>
+            ) : (
+              <Text
+                fontSize="var(--font-size-md)"
+                color="var(--text)"
+                lineHeight="1.5"
+              >
+                Количество {resourceTitle} на вашем тарифе ограничено. Вы
+                использовали{' '}
+                <strong>
+                  {used} из {limit}
+                </strong>{' '}
+                (осталось свободных слотов:{' '}
+                <strong>{Math.max(0, limit - (used ?? 0))}</strong>).
+              </Text>
+            )}
 
             <Box className="limit-exceeded-modal__info-box">
               <Text
@@ -93,9 +121,9 @@ export function LimitExceededModal({
                 color="var(--text-secondary)"
                 lineHeight="1.6"
               >
-                Чтобы создать новые {resourceTitle}, вы можете удалить старые
-                или неактуальные (квота сразу освободится) либо обратиться в
-                службу поддержки для расширения лимитов.
+                {isReached
+                  ? `Чтобы создать новые ${resourceTitle}, вы можете удалить старые или неактуальные (квота сразу освободится) либо обратиться в службу поддержки для расширения лимитов.`
+                  : `Если вам потребуется больше ${resourceTitle}, вы можете заблаговременно обратиться в службу поддержки для расширения лимитов вашего аккаунта.`}
               </Text>
 
               <Flex className="limit-exceeded-modal__support-row">

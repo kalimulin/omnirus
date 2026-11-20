@@ -23,6 +23,11 @@
     background: rgba(234, 88, 12, 0.12);
     color: var(--orange-600, #ea580c);
     flex-shrink: 0;
+
+    &--info {
+      background: rgba(0, 86, 214, 0.1);
+      color: var(--primary, #0056d6);
+    }
   }
 
   &__body {
